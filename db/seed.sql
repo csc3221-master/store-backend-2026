@@ -529,3 +529,4 @@ COMMIT;
 -- SELECT COUNT(*) AS category_count FROM categories;           -- 10
 -- SELECT COUNT(*) AS purchase_order_count FROM purchase_orders; -- 12
 -- SELECT COUNT(*) AS receipt_count FROM receipts;              -- 8
+-- 
