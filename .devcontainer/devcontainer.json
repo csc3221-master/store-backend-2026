@@ -1,0 +1,28 @@
+{
+    "name": "Store application backend",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "remoteUser": "root",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "dbaeumer.vscode-eslint",
+                "esbenp.prettier-vscode",
+                "bradlc.vscode-tailwindcss",
+                "ms-vscode.vscode-typescript-next",
+                "ms-azuretools.vscode-docker"
+            ]
+        }
+    },
+    "forwardPorts": [
+        3000,
+	1455
+    ],
+    "portsAttributes": {
+        "3000": {
+            "label": "Mass Availability",
+            "onAutoForward": "notify"
+        }
+    },
+}
