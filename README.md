@@ -170,3 +170,140 @@ The Vercel function entry point is [api/index.ts](api/index.ts). It exports the 
 Set `DATABASE_URL` and `APP_TOKEN` in the Vercel project's environment variables, then deploy normally. The separate [src/server.ts](src/server.ts) entry point is only for local or traditional Node.js hosting.
 
 CORS currently allows every origin so a separately deployed frontend can call the API. A production application should restrict `origin` to its trusted frontend domains.
+
+
+## Endpoints list by ChatGPT
+Here are the endpoints currently implemented in the app, based on the repo.
+
+Base URL in production:
+
+```text
+https://store-backend-2026.vercel.app
+```
+
+### General
+
+```text
+GET /api
+```
+
+### Customers
+
+```text
+GET   /api/customers
+GET   /api/customers/:id
+POST  /api/customers
+PUT   /api/customers/:id
+PATCH /api/customers/:id
+
+GET   /api/customers/:id/purchase_orders
+GET   /api/customers/:id/receipts
+```
+
+There is intentionally no customer DELETE endpoint.
+
+### Products
+
+```text
+GET    /api/products
+GET    /api/products/:id
+POST   /api/products
+PUT    /api/products/:id
+PATCH  /api/products/:id
+DELETE /api/products/:id
+
+GET    /api/products/:id/purchase_orders
+GET    /api/products/:id/receipts
+```
+
+### Product categories
+
+```text
+GET    /api/products/:product_id/categories
+POST   /api/products/:product_id/categories
+DELETE /api/products/:product_id/categories/:category_id
+```
+
+There is no `PUT` or `PATCH` here because `product_categories` currently has no editable attributes beyond the two foreign keys.
+
+### Categories
+
+```text
+GET    /api/categories
+GET    /api/categories/:id
+POST   /api/categories
+PUT    /api/categories/:id
+PATCH  /api/categories/:id
+DELETE /api/categories/:id
+```
+
+### Purchase orders
+
+```text
+GET   /api/purchase_orders
+GET   /api/purchase_orders/:po_id
+POST  /api/purchase_orders
+PATCH /api/purchase_orders/:po_id
+```
+
+The `PATCH` endpoint requires:
+
+```http
+Authorization: Bearer <APP_TOKEN>
+```
+
+There is intentionally no purchase-order DELETE endpoint.
+
+### Purchase-order items
+
+```text
+GET    /api/purchase_orders/:po_id/items
+GET    /api/purchase_orders/:po_id/items/:item_id
+POST   /api/purchase_orders/:po_id/items
+DELETE /api/purchase_orders/:po_id/items/:item_id
+```
+
+Adding or removing items automatically recalculates the purchase order total.
+
+### Generate a receipt from a purchase order
+
+```text
+POST /api/purchase_orders/:po_id/receipt
+```
+
+This creates a receipt for the order and copies the purchase-order items into `receipt_items`.
+
+### Receipts
+
+```text
+GET   /api/receipts
+GET   /api/receipts/:receipt_id
+POST  /api/receipts
+PATCH /api/receipts/:receipt_id
+```
+
+The `PATCH` endpoint requires:
+
+```http
+Authorization: Bearer <APP_TOKEN>
+```
+
+There is intentionally no receipt DELETE endpoint.
+
+### Receipt items
+
+```text
+GET    /api/receipts/:receipt_id/items
+GET    /api/receipts/:receipt_id/items/:item_id
+POST   /api/receipts/:receipt_id/items
+DELETE /api/receipts/:receipt_id/items/:item_id
+```
+
+Adding or removing receipt items automatically recalculates the receipt total.
+
+So in total, the app currently exposes **34 API endpoints**, with only these two protected by the token:
+
+```text
+PATCH /api/purchase_orders/:po_id
+PATCH /api/receipts/:receipt_id
+```
